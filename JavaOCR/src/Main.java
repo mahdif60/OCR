@@ -176,7 +176,7 @@ public class Main {
 			System.out.println("Error: " + e.getMessage());
 		}
 
-		// -------------------------------- erosion --------------------------------------
+		// -------------------------------- delation --------------------------------------
 				try {
 				int k; //k is image number
 				for (k=1;k<5;k++) {
@@ -185,15 +185,19 @@ public class Main {
 					// Creating an empty matrix to store the result
 				      Mat dst = new Mat();
 				      // Preparing the kernel matrix object
-				      Mat kernel = Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new  Size((5*5) + 1, (5*5)+1));
+				      Mat kernel = Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new  Size((2*2) + 1, (2*2)+1));
 
 				      // Applying erode on the Image
-				      Imgproc.erode(source, dst, kernel);
+				      Imgproc.dilate(source, dst, kernel);
 
 				      // Writing the image
-					Imgcodecs.imwrite("C:\\Users\\MF_PC\\git\\JavaOCR\\JavaOCR\\erosion\\"+k+".jpg", dst);
+					Imgcodecs.imwrite("C:\\Users\\MF_PC\\git\\JavaOCR\\JavaOCR\\delation\\"+k+".jpg", dst);
 				}
 			}catch(Exception e){}
+				
+				
+							
+				
 				
 
 		//-------------------------- OCR --------------------------------
@@ -203,9 +207,9 @@ public class Main {
 			try {
 
 				ITesseract instance = new Tesseract();  // JNA Interface Mapping
-				// File tessDataFolder = LoadLibs.extractTessResources("tessdata"); // Maven build bundles English data
+				// File tessDataFolder = LoadLibs.extractTessResources("tessdata"); 
 				instance.setDatapath("C:\\Users\\MF_PC\\git\\JavaOCR\\JavaOCR\\tessdata");
-				File imageFile = new File("C:\\Users\\MF_PC\\git\\JavaOCR\\JavaOCR\\binary\\"+k+".jpg");
+				File imageFile = new File("C:\\Users\\MF_PC\\git\\JavaOCR\\JavaOCR\\delation\\"+k+".jpg");
 
 				String result = instance.doOCR(imageFile);
 				System.out.println(result);
