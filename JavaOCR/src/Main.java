@@ -22,33 +22,40 @@ public class Main {
 
 		
 		//-------------------------- Resize Images to ready for OCR -----------------
-		try{
+		/*try{
 			int k; //k is image number
 			for (k=1;k<5;k++) {
 				Mat source =Imgcodecs.imread("C:\\Users\\MF_PC\\git\\JavaOCR\\JavaOCR\\res\\"+k+".jpg",Imgcodecs.CV_LOAD_IMAGE_COLOR);			
 
 				Mat sc3 = new Mat();
-				Size sz = new Size(3*source.width(),3*source.height());
+				Size sz = new Size(10*source.width(),10*source.height());
 				Imgproc.resize( source, sc3, sz );
-				
+
 				Imgcodecs.imwrite("C:\\Users\\MF_PC\\git\\JavaOCR\\JavaOCR\\resize\\"+k+".jpg", sc3);
 			}
 		}catch(Exception e){}
-		
+
+		 */
+
 		//------------------  Denoising -------------------------
+		
+		/*
 		try{
 			int k; //k is image number
 			for (k=1;k<5;k++) {
 				Mat source =Imgcodecs.imread("C:\\Users\\MF_PC\\git\\JavaOCR\\JavaOCR\\resize\\"+k+".jpg",Imgcodecs.CV_LOAD_IMAGE_COLOR);			
 
-			
+
 				Mat destination = new Mat(source.rows(),source.cols(),source.type());
 				destination = source;
 				Photo.fastNlMeansDenoisingColored(source,destination, 10, 10, 7, 21);
 				Imgcodecs.imwrite("C:\\Users\\MF_PC\\git\\JavaOCR\\JavaOCR\\denoise\\"+k+".jpg", destination);
 			}
 		}catch(Exception e){}
-		// TODO code application logic here  */
+		 
+		 */
+		 
+		/*
 
 		//------------------------------- Crop an Image ----------------------
 		try {
@@ -56,15 +63,15 @@ public class Main {
 			for (k=1;k<5;k++) {
 				Mat sc =Imgcodecs.imread("C:\\Users\\MF_PC\\git\\JavaOCR\\JavaOCR\\denoise\\"+k+".jpg",Imgcodecs.CV_LOAD_IMAGE_COLOR);			
 
-				Rect rectCrop = new Rect(1, 525, 950, 150);
+				Rect rectCrop = new Rect(1, 1100, 1900, 250);
 				Mat image_roi = new Mat (sc,rectCrop);    		
-				
+
 				Imgcodecs.imwrite("C:\\Users\\MF_PC\\git\\JavaOCR\\JavaOCR\\crop\\"+k+".jpg",image_roi);
 			}     
 		}catch(Exception e){}
 
 
-
+*/
 		//------------------  Sharpening -------------------------
 		try {
 			int k; //k is image number
@@ -87,6 +94,11 @@ public class Main {
 		}catch(Exception e){}
 
 
+		
+		
+		
+	
+		
 		//--------------------------------- convert to gray ------------------------------------
 		try {
 
@@ -101,12 +113,9 @@ public class Main {
 
 				Mat mat1 = new Mat(image.getHeight(),image.getWidth(),CvType.CV_8UC3);
 
-				// Denoising
+				// gray
 				Mat destination = new Mat(mat1.rows(),mat1.cols(),mat1.type());
 				destination = mat1;
-				Photo.fastNlMeansDenoisingColored(mat1,destination, 10, 10, 7, 21);
-
-
 				Imgproc.cvtColor(mat, destination, Imgproc.COLOR_RGB2GRAY);
 
 				byte[] data1 = new byte[mat1.rows() * mat1.cols() * (int)(mat1.elemSize())];
@@ -114,7 +123,7 @@ public class Main {
 
 				BufferedImage image1 = new BufferedImage(mat1.cols(),mat1.rows(), BufferedImage.TYPE_BYTE_GRAY);
 				image1.getRaster().setDataElements(0, 0, mat1.cols(), mat1.rows(), data1);
-				File ouptut = new File("C:\\Users\\MF_PC\\git\\JavaOCR\\JavaOCR\\gray\\"+k+"g.jpg");
+				File ouptut = new File("C:\\Users\\MF_PC\\git\\JavaOCR\\JavaOCR\\gray\\"+k+".jpg");
 				ImageIO.write(image1, "jpg", ouptut);
 			}
 
@@ -122,20 +131,44 @@ public class Main {
 			System.out.println("Error: " + e.getMessage());
 		}
 
+		
+		
+
+	
+	
+
+		
+
+		//   ---------------------- Image histogram equalizer --------------
+
+
+		/*try {
+			int k; //k is image number
+			for (k=1;k<5;k++) {
+				Mat sc5 =Imgcodecs.imread("C:\\Users\\MF_PC\\git\\JavaOCR\\JavaOCR\\gray\\"+k+".jpg",Imgcodecs.CV_LOAD_IMAGE_GRAYSCALE);			
+				Mat destination = new Mat(sc5.rows(),sc5.cols(),sc5.type());
+    		
+				Imgproc.equalizeHist(sc5, destination);
+				Imgcodecs.imwrite("C:\\Users\\MF_PC\\git\\JavaOCR\\JavaOCR\\enhance\\"+k+".jpg",destination);
+			}     
+		}catch(Exception e){}*/
+
+
+
 
 		// -------------------------  Binarization -------------------------------------- 
 		try{
 			int k;
 			for (k=1;k<5;k++) {
-				String file ="C:\\Users\\MF_PC\\git\\JavaOCR\\JavaOCR\\gray\\"+k+"g.jpg";
+				String file ="C:\\Users\\MF_PC\\git\\JavaOCR\\JavaOCR\\gray\\"+k+".jpg";
 				Mat src = Imgcodecs.imread(file);
 
 				// Creating an empty matrix to store the result
 				Mat dst = new Mat();
-				Imgproc.threshold(src, dst, 160, 220, Imgproc.THRESH_BINARY);
+				Imgproc.threshold(src, dst, 140, 255, Imgproc.THRESH_BINARY);
 
 				// Writing the image
-				Imgcodecs.imwrite("C:\\Users\\MF_PC\\git\\JavaOCR\\JavaOCR\\binary\\"+k+"b.jpg", dst);
+				Imgcodecs.imwrite("C:\\Users\\MF_PC\\git\\JavaOCR\\JavaOCR\\binary\\"+k+".jpg", dst);
 
 				//System.out.println("Image Processed");
 			}
@@ -143,6 +176,25 @@ public class Main {
 			System.out.println("Error: " + e.getMessage());
 		}
 
+		// -------------------------------- erosion --------------------------------------
+				try {
+				int k; //k is image number
+				for (k=1;k<5;k++) {
+					Mat source =Imgcodecs.imread("C:\\Users\\MF_PC\\git\\JavaOCR\\JavaOCR\\binary\\"+k+".jpg",Imgcodecs.CV_LOAD_IMAGE_ANYDEPTH);			
+					
+					// Creating an empty matrix to store the result
+				      Mat dst = new Mat();
+				      // Preparing the kernel matrix object
+				      Mat kernel = Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new  Size((5*5) + 1, (5*5)+1));
+
+				      // Applying erode on the Image
+				      Imgproc.erode(source, dst, kernel);
+
+				      // Writing the image
+					Imgcodecs.imwrite("C:\\Users\\MF_PC\\git\\JavaOCR\\JavaOCR\\erosion\\"+k+".jpg", dst);
+				}
+			}catch(Exception e){}
+				
 
 		//-------------------------- OCR --------------------------------
 		int k;
@@ -153,7 +205,7 @@ public class Main {
 				ITesseract instance = new Tesseract();  // JNA Interface Mapping
 				// File tessDataFolder = LoadLibs.extractTessResources("tessdata"); // Maven build bundles English data
 				instance.setDatapath("C:\\Users\\MF_PC\\git\\JavaOCR\\JavaOCR\\tessdata");
-				File imageFile = new File("C:\\Users\\MF_PC\\git\\JavaOCR\\JavaOCR\\binary\\"+k+"b.jpg");
+				File imageFile = new File("C:\\Users\\MF_PC\\git\\JavaOCR\\JavaOCR\\binary\\"+k+".jpg");
 
 				String result = instance.doOCR(imageFile);
 				System.out.println(result);
